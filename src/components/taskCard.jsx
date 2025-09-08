@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 
 export function Cards({
   id,
@@ -7,21 +7,32 @@ export function Cards({
   status,
   created_at,
   dueDate,
+  updated_at,
   removingTask,
   savingTask,
 }) {
-  const [isEditing, setisEditing] = useState(false); 
-  const [isUpdated, setisUpdated] = useState(false);  // to show edited_at date
-  const [updatedTitle, setUpdatedTitle] = useState(title); // if we don't edit one of the input fields
-  const [updatedDiscription, setUpdatedDiscription] = useState(discription);
-  let updated_at = new Date().toISOString().split("T")[0];
+  const [isEditing, setisEditing] = useState(false);
+  const [isUpdated, setisUpdated] = useState(false);
+  const [updatedTask, setUpdatedTask] = useState({
+    id,
+    title: title,
+    discription: discription,
+    created_at,
+    dueDate,
+    updated_at: new Date().toISOString().split("T")[0],
+    status: "just now",
+  });
+  // if we dont edit one of the input fields thats why using default state
+  // couldn't use updatedTitle/discription as key names bcz cards are being made using title, discription props only
 
   return (
     <div class="todo-card my-4">
       {!isEditing && (
         <>
           <h2 class="todo-title">{title}</h2>
-          <div><p class="todo-description">{discription}</p></div>
+          <div>
+            <p class="todo-description">{discription}</p>
+          </div>
         </>
       )}
 
@@ -36,7 +47,7 @@ export function Cards({
               defaultValue={title}
               // value={updatedTitle}
               onChange={(event) => {
-                setUpdatedTitle(event.target.value);
+                setUpdatedTask({ ...updatedTask, title: event.target.value });
               }}
             ></input>
           </div>
@@ -51,14 +62,17 @@ export function Cards({
               defaultValue={discription}
               // value={updatedDiscription}
               onChange={(event) => {
-                setUpdatedDiscription(event.target.value);
+                setUpdatedTask({
+                  ...updatedTask,
+                  discription: event.target.value,
+                });
               }}
             />
           </div>
         </>
       )}
 
-       <div className="todo-meta">
+      <div className="todo-meta">
         <div>
           <span className="todo-status status-in-progress">{status}</span>
         </div>
@@ -101,15 +115,7 @@ export function Cards({
               type="button"
               className="canvaBtn btn-save"
               onClick={() => {
-                savingTask(
-                  id,
-                  updatedTitle,
-                  updatedDiscription,
-                  created_at,
-                  dueDate,
-                  updated_at,
-                  status = "just now",
-                );
+                savingTask(updatedTask);
                 setisEditing(false);
                 setisUpdated(true);
               }}

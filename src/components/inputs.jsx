@@ -1,11 +1,15 @@
 import { useState } from "react";
 
 export function Input({ addTask }) {
-  let [title, setTitle] = useState("");
-  let [discription, setDiscription] = useState("");
-  let [status, setStatus] = useState("Pending");
-  let [created_at, setCreated_at] = useState(new Date().toLocaleDateString());
-  let [dueDate, setDueDate] = useState(new Date().toISOString().split("T")[0]);
+  const initialFormState = {
+    title: "",
+    discription: "",
+    created_at: new Date().toLocaleDateString(),
+    dueDate: new Date().toISOString().split("T")[0],
+    updated_at: "",
+    status: "Pending",
+  };
+  let [task, setTask] = useState(initialFormState);
 
   return (
     <>
@@ -22,8 +26,10 @@ export function Input({ addTask }) {
               aria-label="Search"
               id="title"
               name="title"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              value={task.title}
+              onChange={(event) =>
+                setTask({ ...task, title: event.target.value })
+              }
             />
           </div>
           <div className="p-2">
@@ -37,8 +43,10 @@ export function Input({ addTask }) {
               aria-label="Search"
               id="discription"
               name="discrip"
-              value={discription}
-              onChange={(event) => setDiscription(event.target.value)}
+              value={task.discription}
+              onChange={(event) =>
+                setTask({ ...task, discription: event.target.value })
+              }
             />
           </div>
           <div className="p-2">
@@ -48,8 +56,10 @@ export function Input({ addTask }) {
             <select
               id="status"
               className="form-select"
-              value={status}
-              onChange={(event) => setStatus(event.target.value)}
+              value={task.status}
+              onChange={(event) =>
+                setTask({ ...task, status: event.target.value })
+              }
             >
               <option value="pending">Pending</option>
               <option value="in-progress">In Progress</option>
@@ -64,7 +74,9 @@ export function Input({ addTask }) {
               type="date"
               id="dueDate"
               className="form-control"
-              onChange={(event) => setDueDate(event.target.value)}
+              onChange={(event) =>
+                setTask({ ...task, dueDate: event.target.value })
+              }
             />
           </div>
           <div className="p-2">
@@ -75,14 +87,19 @@ export function Input({ addTask }) {
               type="date"
               id="date"
               className="form-control"
-              onChange={(event) => setCreated_at(event.target.value)}
+              onChange={(event) =>
+                setTask({ ...task, created_at: event.target.value })
+              }
             />
           </div>
           <div className="p-2 text-endd">
             <button
               type="button"
               className="btn btn-outline-success"
-              onClick={() => addTask({title, discription, status, created_at, dueDate})}
+              onClick={() => {
+                addTask(task);
+                setTask(initialFormState);
+              }}
             >
               Add task
             </button>

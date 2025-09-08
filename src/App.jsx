@@ -13,10 +13,10 @@ export function App() {
     setTasklist(taskList.filter((task) => task.id !== id));
   };
 
-  const updatingTask = (id, title, discription, created_at, dueDate, updated_at, status) => {
+  const updatingTask = (updatedTask) => {
     setTasklist(
       taskList.map((task) => {
-        return task.id !== id ? task : { id, title, discription, status, created_at, dueDate, updated_at };
+        return task.id !== updatedTask.id ? task : updatedTask;
       })
     );
   };
